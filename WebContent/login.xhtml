@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template_prelogin.xhtml">
+
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<h:form style="width:300px; margin: auto;">
+		<p:messages showIcon="false">
+            <p:autoUpdate />
+        </p:messages>
+        
+		<h:panelGrid id="grid" columns="3" cellpadding="5">
+			<h:outputLabel for="username" value="Username "/>
+			<p:inputText value="#{authenticator.username}" id="username" required="true" title="Insert your username" requiredMessage="Username required" />
+			<p:tooltip id="usernameFocus" for="username" showEvent="focus" hideEvent="blur" />			
+
+			<h:outputLabel for="password" value="Password "/>
+			<p:password value="#{authenticator.password}" id="password" required="true" title="Insert your password" requiredMessage="Password required"/>
+			<p:tooltip id="passwdFocus" for="password" showEvent="focus" hideEvent="blur" />				
+		</h:panelGrid>
+		<br/>
+		<p:commandButton value="Login" update="grid" icon="pi pi-check" validateClient="true" style="margin-right:10px;" action="#{authenticator.login}" />
+	</h:form>
+</ui:composition>
+</html>

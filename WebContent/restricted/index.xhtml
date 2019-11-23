@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/template_main.xhtml">
+
+	<br/>
+	<br/>
+	<h:form id="registeredUsersForm">	
+
+		<p:commandLink update="addUserDialog" oncomplete="PF('addDlg').show();">
+			<p:graphicImage class="pi pi-user-plus" style="font-size: 30px; color: gray;" />			
+		</p:commandLink>
+
+		<p:dataTable id="registeredUsersDataTable" var="u" value="#{userServiceBean.users}" style="width: 600px; margin: 0 auto;">
+
+			<p:column headerText="ID" width="8%">
+				<h:outputText value="#{u.id}" />
+			</p:column>
+
+			<p:column headerText="Username">
+				<h:outputText value="#{u.username}" style="font-style: italic;" />
+			</p:column>
+
+			<p:column headerText="Name" width="45%">
+				<h:outputText value="#{u.firstname}" />&nbsp;
+				<h:outputText value="#{u.lastname}" />
+			</p:column>
+
+			<p:column width="15%" update="@form">
+				<p:commandLink update="editUserDialog" oncomplete="PF('editDlg').show();">
+					<f:setPropertyActionListener value="#{u}" target="#{userServiceBean.user}" />
+					<p:graphicImage id="edit" class="pi pi-pencil" style="font-size: 25px; color: gray" />					
+				</p:commandLink>
+
+				<p:commandLink action="#{userServiceBean.deleteUser(u)}" update="@form">
+					<p:graphicImage class="pi pi-trash" style="font-size: 25px; color: gray" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	
+	<!-- Dialogs for input data -->
+	
+	<!-- Dialog for: add user -->
+	
+	<p:dialog id="addUserDialog" header="Adding new user" widgetVar="addDlg" height="200px">
+		<p:ajax event="close" listener="#{userServiceBean.resetUser}" />
+		<h:form>		
+			<h:panelGrid columns="3" cellpadding="5">
+				<h:outputLabel for="newuserusername" value="Username " />
+				<p:inputText value="#{userServiceBean.user.username}" id="newuserusername" required="true" requiredMessage="Username required" />
+				<p:message id="newusernamemessage" for="newuserusername" display="text" />
+				
+				<h:outputLabel for="newuserfirstname" value="First name " />
+				<p:inputText value="#{userServiceBean.user.firstname}" id="newuserfirstname" required="true" requiredMessage="First name required" />
+				<p:message id="newuserfirstnamemessage" for="newuserfirstname" display="text"/>
+				
+				<h:outputLabel for="newuserlastname" value="Last name " />
+				<p:inputText value="#{userServiceBean.user.lastname}" id="newuserlastname" required="true" requiredMessage="Last name required" />								
+				<p:message id="newuserlastnamemessage" for="newuserlastname" display="text"/>
+
+				<h:outputLabel for="newuserpassword" value="Password " />
+				<p:password value="#{userServiceBean.user.password}" id="newuserpassword" required="true" requiredMessage="Password required" />
+				<p:message id="newuserpasswordmessage" for="newuserpassword" display="text"/>				
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="OK" action="#{userServiceBean.addUser()}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('addDlg').hide()" 
+				update=":registeredUsersForm:registeredUsersDataTable 
+					newusernamemessage newuserfirstnamemessage 
+					newuserlastnamemessage newuserpasswordmessage"/>			
+		</h:form>
+	</p:dialog>
+	
+	<!-- Dialog for: edit user -->
+	
+	<p:dialog id="editUserDialog" header="Editing user #{userServiceBean.user.username}" widgetVar="editDlg" height="200px" >
+		<p:ajax event="close" listener="#{userServiceBean.resetUser}" />	
+		<h:form>		
+			<h:panelGrid columns="3" cellpadding="5">
+				<h:outputLabel for="edituserusername" value="Username " />
+				<p:inputText value="#{userServiceBean.user.username}" id="edituserusername" required="true" requiredMessage="Username required" />
+				<p:message id="editusernamemessage" for="edituserusername" display="text" />
+				
+				<h:outputLabel for="edituserfirstname" value="First name " />
+				<p:inputText value="#{userServiceBean.user.firstname}" id="edituserfirstname" required="true" requiredMessage="First name required" />
+				<p:message id="edituserfirstnamemessage" for="edituserfirstname" display="text"/>
+				
+				<h:outputLabel for="edituserlastname" value="Last name " />
+				<p:inputText value="#{userServiceBean.user.lastname}" id="edituserlastname" required="true" requiredMessage="Last name required" />								
+				<p:message id="edituserlastnamemessage" for="edituserlastname" display="text"/>					
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="OK" action="#{userServiceBean.editUser()}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('editDlg').hide()" 
+				update=":registeredUsersForm:registeredUsersDataTable 
+					editusernamemessage edituserfirstnamemessage 
+					edituserlastnamemessage"/>			
+		</h:form>
+	</p:dialog>
+
+</ui:composition>
+</html>
